@@ -1,6 +1,7 @@
 import numpy as np
 import sys, os
-sys.path.append(os.pardir)
+sys.path.append('C:\\dev\\PycharmProjects\\DLfromScratch\\deep-learnig-from-scratch')
+# print(sys.path)
 from dataset.mnist import load_mnist
 
 
@@ -14,14 +15,22 @@ def mean_squared_error(y, t):
 
 
 def cross_entropy_error(y, t):
+    # print(y.ndim)
+    # print(y)
+    if y.ndim == 1 :
+        t = t.reshape(1, t.size)
+        y = y.reshape(1, y.size)
+
+    # print(y.ndim)
+    # print(y)
+    batch_size = y.shape[0]
     delta = 1e-7
-    return -np.sum(t * np.log(y + delta))
+    return -np.sum(t * np.log(y + delta))/batch_size
 
 # MSE
 # y = [0.1, 0.05, 0.6, 0.0, 0.05, 0.1, 0.0, 0.1, 0.0, 0.0]
 mse = mean_squared_error(np.array(y1), np.array(t))
 print(mse)
-
 # y = [0.1, 0.05, 0.1, 0.0, 0.05, 0.1, 0.0, 0.6, 0.0, 0.0]
 mse = mean_squared_error(np.array(y2), np.array(t))
 print(mse)
@@ -29,6 +38,19 @@ print(mse)
 #CEE
 cee = cross_entropy_error(np.array(y1), np.array(t))
 print(cee)
-
 cee = cross_entropy_error(np.array(y2), np.array(t))
 print(cee)
+
+(x_train, t_train), (x_test, t_test) = load_mnist(normalize=True, one_hot_label=True)
+print(x_train.shape) #(60000, 784)
+print(t_train.shape) #(60000, 10)
+
+train_size = x_train.shape[0] # 60000
+batch_size = t_train.shape[0] # 10
+batch_mask = np.random.choice(train_size, batch_size)
+print(batch_mask)
+x_batch = x_train[batch_mask]
+t_batch = t_train[batch_mask]
+
+
+
